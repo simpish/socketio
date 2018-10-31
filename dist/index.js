@@ -2,10 +2,8 @@ let http = require("http");
 let fs = require("fs");
 let server = http.createServer();
 let config = require('./config');
-let io = require('socket.io');
 
 server.on('request', (req, res) => {
-
   fs.readFile(__dirname + '/html/index.html', (err, data) => {
 
     if (err) {
@@ -21,27 +19,35 @@ server.on('request', (req, res) => {
 });
 
 
-//SocketServer
-io.listen(server);
-
-// Scoket Event
-io.sockets.on('connection', (socket) => {
-  socket.emit('greeting', {message: 'hello'},
-    (data) => {
-      console.log('result: ' + data);
-    });
-});
-
-io.sockets.on('updateTransform', (transform) => {
-  console.log("update:",transform);
-});
-
-// Scoket Event
-
+let socketio = require('socket.io');
+let io = socketio.listen(server);
 
 // サーバを待ち受け状態にする
 // 第1引数: ポート番号
 // 第2引数: IPアドレス
 server.listen(config.port);
 
+
+// console.log("io.sockets:",io);
+
+// Scoket Event
+io.sockets.on('connection',
+  (socket) => {
+  // console.log("socket:", socket);
+  socket.emit('greeting', {message: 'hello sockets'},
+    (data) => {
+      console.log('result: ' + data);
+    });
+
+  socket.on('updateTransform', (transform) => {
+    // console.log("update:",transform);
+
+    //dbに保存
+
+    //dbを返す
+    socket.emit("updateResponse", transform);
+
+  });
+
+});
 
