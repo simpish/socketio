@@ -1,0 +1,23 @@
+{
+  "name": "socketio",
+  "version": "1.0.0",
+  "description": "socekt io test",
+  "main": "./dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/simpish/socketio.git"
+  },
+  "author": "matsumoto",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/simpish/socketio/issues"
+  },
+  "homepage": "https://github.com/simpish/socketio#readme",
+  "dependencies": {
+    "mongodb": "^3.1.8",
+    "socket.io": "^2.1.1"
+  }
+}

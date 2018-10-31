@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <!--<script-->
+    <!--src="https://code.jquery.com/jquery-3.3.1.min.js"-->
+    <!--integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="-->
+    <!--crossorigin="anonymous"></script>-->
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+<button id="emitbutton">
+  emit
+</button>
+
+
+<script>
+  let socket = io.connect();
+  socket.on('greeting', (data, fn) => {
+    let answer = confirm(data.message);
+    fn(answer);
+  });
+
+  let button = document.getElementById("emitbutton");
+  button.on("click", (event)=>{
+    let transform = {position:{x:0, y:0, z:0}};
+    socket.emit("updateTransform", transform);
+  })
+</script>
+
+</body>
+</html>
