@@ -1,3 +1,6 @@
+// let express = require("express");
+// let app = express.createServer();
+
 let http = require("http");
 let fs = require("fs");
 let server = http.createServer();
@@ -33,8 +36,9 @@ server.listen(config.port);
 // Scoket Event
 io.sockets.on('connection',
   (socket) => {
+
   // console.log("socket:", socket);
-  socket.emit('greeting', {message: 'hello sockets'},
+    socket.emit('greeting', {message: 'hello sockets'},
     (data) => {
       console.log('result: ' + data);
     });
@@ -44,9 +48,11 @@ io.sockets.on('connection',
 
     //dbに保存
 
-    //dbを返す
-    socket.emit("updateResponse", transform);
 
+    //自分以外に送る
+    socket.broadcast.emit("updateResponse", transform);
+    //自分にも送る
+    socket.emit("updateResponse", transform);
   });
 
 });

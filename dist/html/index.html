@@ -7,34 +7,54 @@
     src="https://code.jquery.com/jquery-3.3.1.min.js"
     integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.2/TweenMax.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
 <button id="emitbutton">
   emit
 </button>
+<div>
+  <p id="message">
+
+  </p>
+</div>
 
 <script>
   $(function () {
 
     let socket = io.connect();
 
+    let localPosition = {x: 0, y: 0, z: 0}
+
     socket.on('greeting', (data, fn) => {
-      console.log("greeting answer : " , data.message);
+      console.log("greeting answer : ", data.message);
       fn(data.message);
     });
 
-    socket.on('updateResponse', (transform)=>{
-
-      console.log("update", transform)
-
+    socket.on('updateResponse', (transform) => {
+      // console.log("update", transform)
+      localPosition = transform.position;
+      $("#message").html(`x : ${transform.position.x} , y : ${transform.position.y} z : ${transform.position.z} <br> ${$("#message").html()} `);
+      // console.log("$(\"#message\")", $("#message").html() );
     });
 
     $("#emitbutton").on("click", (event) => {
-      let transform = {position: {x: 0, y: 0, z: 0}};
-      socket.emit( "updateTransform", transform);
-    });
+      let animationPos = localPosition;
 
+      TweenMax.to(animationPos, 1, {
+        x: Math.random()*100,
+        y: Math.random()*100,
+        z: Math.random()*100,
+        onUpdate : () => {
+          animationPos.x = Math.floor(animationPos.x);
+          animationPos.y = Math.floor(animationPos.y);
+          animationPos.z = Math.floor(animationPos.z);
+          let transform = {position: animationPos};
+          socket.emit("updateTransform", transform);
+        }
+      });
+    });
   })
 </script>
 
