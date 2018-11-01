@@ -101,6 +101,13 @@
         ease:Power4.easeInOut
       });
     });
+
+    $("body").on("touchmove", (event)=>{
+      let targetPos = event.touches[0];
+      let transform = {position:{x:targetPos.clientX, y:targetPos.clientY, z:0}};
+      socket.emit("updateTransform", transform);
+    })
+
   })
 </script>
 
